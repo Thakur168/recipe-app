@@ -5,7 +5,7 @@ import Login from "./Pages/Login";
 import SignUp from "./Pages/Signup";
 import Header from "./Components/Header";
 import Footer from "./Components/Footer.js";
-import "./assets/css/style.css";
+import './assets/css/style.css';
 import AboutUs from "./Pages/AboutUs/index.js";
 import ContactUs from "./Pages/ContactUs/index.js";
 

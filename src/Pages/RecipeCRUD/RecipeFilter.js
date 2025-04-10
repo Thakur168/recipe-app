@@ -18,7 +18,6 @@ function RecipeFilter({ getFilterFields }) {
   const history = useHistory();
 
   const onSubmit = (data) => {
-    console.log(data, "data");
     const values = removeEmptyFields(data);
     const queryParams = new URLSearchParams(values);
     history.push({

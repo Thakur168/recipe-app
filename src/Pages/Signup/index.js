@@ -11,7 +11,6 @@ function SignUp({}) {
   const history = useHistory();
 
   const onSubmit = (data) => {
-    console.log(data, "data");
     // const values = removeEmptyFields(data);
     // history.push('/')
   };

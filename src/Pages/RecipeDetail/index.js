@@ -1,27 +1,34 @@
+// Page created by Priya Thakur (8958634)
+
+import { useParams } from "react-router-dom";
+import { RECIPES } from "../../constant";
+
 function RecipeDetail() {
+  const { id } = useParams();
+  const recipe = RECIPES.find((r) => r.id == parseInt(id));
+
+  if (!recipe) {
+    return <div>Recipe not found!</div>;
+  }
+
   return (
     <main className="container my-5 prod_detail">
       <div className="row">
         <div className="col-md-5">
           <div className="text-center">
             <img
-              src="../../assets/images/pinach_and_Feta_Omelette.png"
-              alt="pinach_and_Feta_Omelette"
-              className="img-fluid rounded shadow-sm"
-              //   style="max-width:100%;"
+              src={recipe.url}
+              alt={recipe.recipeName}
+              className="img-fluid rounded shadow-sm recipe-img"
             />
           </div>
         </div>
 
         <div className="col-md-7">
           <h1 className="mb-3" id="recipe-name">
-            Spinach and Feta Omelette
+            {recipe.recipeName}
           </h1>
-          <p className="mb-4">
-            {" "}
-            A fluffy omelette filled with spinach and feta cheese. It’s a quick
-            breakfast or dinner option that’s both healthy and satisfying.
-          </p>
+          <p className="mb-4">{recipe.description}</p>
         </div>
       </div>
 
@@ -64,10 +71,8 @@ function RecipeDetail() {
             role="tabpanel"
             aria-labelledby="details-tab"
           >
-            <h4>recipe Description</h4>
-            <p> A fluffy omelette filled with spinach and feta cheese.
-                      It’s a quick breakfast or dinner option that’s both
-                      healthy and satisfying.</p>
+            <h4>Recipe Description</h4>
+            <p>{recipe.description}</p>
           </div>
 
           <div
@@ -76,11 +81,10 @@ function RecipeDetail() {
             role="tabpanel"
             aria-labelledby="info-tab"
           >
-            <h4>recipe Information</h4>
+            <h4>Recipe Information</h4>
             <ul className="list-unstyled">
               <li>
-                <strong>Category:</strong>
-                category here
+                <strong>Category:</strong> {recipe.category}
               </li>
             </ul>
           </div>

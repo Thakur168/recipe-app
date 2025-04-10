@@ -43,22 +43,40 @@ body {
     text-decoration: underline;
 }
 
-.banner {
-    margin-top: 1px;
+.slider-item {
+    position: relative;
+  }
+  
+  .banner-background {
+    position: relative;
+    width: 100%;
     min-height: 580px;
-    background-image: url('../images/banner_image.jpg');
     background-size: cover;
     background-position: center;
-    color: white;
-    padding-top: 10%;
-}
-
-.banner-content {
-    text-align: center;
+    display: flex;
     align-items: center;
-}
+    justify-content: center;
+    margin-top: 1.5px;
+    min-height: 580px;
+  }  
+  .banner-content {
+    color: #fff;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    padding: 20px;
+    text-align: center;
+  }
+  
+  .banner h1 {
+    font-size: 3rem;
+    font-weight: bold;
+  }
+  
+  .banner p  {
+    font-size: 1.2rem;
+    margin-top: 10px;
+  }
 
-.banner h1 {
+/* .banner h1 {
     color: black;
     font-size: 60px;
     margin-bottom: 1rem;
@@ -67,7 +85,7 @@ body {
 
 .banner p {
     font-size: 28px;
-}
+} */
 
 .categories {
     background-color: #f8f9fa;
@@ -121,7 +139,7 @@ body {
 .category-img {
     width: 150px;
     height: 150px;
-    object-fit: contain;
+    object-fit: cover;
     border-radius: 50%;
     margin-bottom: 15px;
     box-shadow: 0 0 3px black;
@@ -171,6 +189,7 @@ body {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     overflow: hidden;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
+    margin-right: 10px;
 }
 
 .recipe-card:hover {
@@ -181,7 +200,7 @@ body {
 .recipe-card img {
     height: 250px;
     width: 100%;
-    object-fit: contain;
+    object-fit: cover;
 }
 
 .recipe-card-body {
@@ -230,13 +249,9 @@ body {
     text-decoration: none;
 }
 
-/* .login-container{
-    background: url('/src/assets/images/login.jpg');
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position: bottom;
-    padding: 30px 0;
-} */
+.slick-prev:before, .slick-next:before {
+    color: black;
+}
 
 .login-container {
     background: url('/src/assets/images/login.jpg');
@@ -263,6 +278,11 @@ body {
 img{
     height: 120px;
     width: 120px;
+}
+
+.recipe-img{
+    width: 70%;
+    /* height: 50%; */
 }
 
 a.signup-link , a.login-link {

@@ -25,10 +25,10 @@ function Footer() {
                 <div className="content col text-center">
                     <h3>Members Name</h3>
                     <ul>
-                        <li><a href="#">Priya Thakur (8958634)</a></li>
-                        <li><a href="#">Hari Karnan (8925421)</a></li>
-                        <li><a href="#">Vijay Prakash ()</a></li>
-                        <li><a href="#">Venkat Reddy ()</a></li>
+                        <li><p>Priya Thakur (8958634)</p></li>
+                        <li><p>Hari Karnan (8925421)</p></li>
+                        <li><p>Vijay Prakash (8962818)</p></li>
+                        <li><p>Venkat Reddy ()</p></li>
                     </ul>
                 </div>
             </div>

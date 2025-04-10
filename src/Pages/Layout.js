@@ -12,7 +12,7 @@ function Layout() {
     <Switch>
       <Route exact path="/" component={Home} />
       <Route path="/recipes" component={Recipe} />
-      <Route path="/recipe/detail" component={RecipeDetail} />
+      <Route path="/recipe/detail/:id" component={RecipeDetail} />
 
       {/* Optional recipe routes if you use them later */}
       <Route path="/recipe-list" component={RecipeList} />
