@@ -1,6 +1,8 @@
-function PageNotFound() {
+function PageNotFound(){
     return(
-        <p>Page Not Found page</p>
+        <div className="not-found-container">
+            <p>Page not found</p>
+        </div>
     )
 }
 

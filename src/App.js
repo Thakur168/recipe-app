@@ -5,17 +5,24 @@ import Login from "./Pages/Login";
 import SignUp from "./Pages/Signup";
 import Header from "./Components/Header";
 import Footer from "./Components/Footer.js";
+import "./assets/css/style.css";
+import AboutUs from "./Pages/AboutUs/index.js";
+import ContactUs from "./Pages/ContactUs/index.js";
 
 function App() {
   return (
     <Router>
       <Header />
       <Switch>
-        <Route exact path="/" component={Layout} />
         <Route path="/login" component={Login} />
         <Route path="/signup" component={SignUp} />
 
-         {/* If no route match, then user will render to PageNotFound component */}
+        <Route path="/about-us" component={AboutUs} />
+        <Route path="/contact-us" component={ContactUs} />
+
+        <Route exact path="/*" component={Layout} />
+
+        {/* If no route match, then user will render to PageNotFound component */}
         <Route component={PageNotFound} />
       </Switch>
       <Footer />
