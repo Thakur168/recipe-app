@@ -1,22 +1,22 @@
 import { Button } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { Link, useHistory } from "react-router-dom";
-
 import InputField from "../../Components/FormFields/InputField";
 
-function Login({}) {
-  // use hooks
+function Login() {
   const { handleSubmit, control, reset } = useForm();
-
   const history = useHistory();
+
   const onSubmit = (data) => {
-    // const values = removeEmptyFields(data);
-    // history.push('/');
+    // You can handle login logic here (e.g., API call)
+    console.log("Login data submitted:", data);
+    // Redirect to home page after login
+    history.push("/");
   };
 
   const cancel = () => {
-    history.push("/");
-    // reset({ email: "", password: "" });
+    reset(); // clears form fields
+    history.push("/"); // navigates back to home
   };
 
   return (
@@ -33,7 +33,7 @@ function Login({}) {
                 placeholder="Enter the login email"
                 type="email"
                 fieldClass="form-control"
-                rules={{ required: true }}
+                rules={{ required: "Email is required" }}
               />
             </div>
             <div className="mb-3">
@@ -41,39 +41,29 @@ function Login({}) {
                 control={control}
                 label="Password"
                 name="password"
-                placeholder="Enter your Password here"
+                placeholder="Enter your password"
                 type="password"
                 fieldClass="form-control"
-                rules={{ required: {
-                  required : true,
-                  message: "Password is required"
-                } }}
+                rules={{ required: "Password is required" }}
               />
             </div>
-
             <div className="row">
               <div className="filter-result-block mb-3 col-3">
                 <Button className="cancel-filter" onClick={cancel}>
                   Cancel
-                </Button>{" "}
+                </Button>
               </div>
               <div className="filter-result-block mb-3 col-3">
                 <Button type="submit" className="apply-filter">
                   Login
-                </Button>{" "}
+                </Button>
               </div>
             </div>
+            <div className="text-center mt-3">
+              <span>Don't have an account? </span>
+              <Link to="/register">Register here</Link>
+            </div>
           </form>
-
-          <div className="mb-3">
-            <p>
-              Don't have an account?{" "}
-              <Link className="signup-link" to="/signup">
-                Sign Up
-              </Link>{" "}
-              now
-            </p>
-          </div>
         </div>
       </div>
     </div>

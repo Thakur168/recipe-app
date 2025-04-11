@@ -4,21 +4,22 @@ import { Link, useHistory } from "react-router-dom";
 
 import InputField from "../../Components/FormFields/InputField";
 
-function SignUp({}) {
-  // use hooks
+function SignUp() {
   const { handleSubmit, control, reset } = useForm();
-
   const history = useHistory();
 
   const onSubmit = (data) => {
-    // const values = removeEmptyFields(data);
-    // history.push('/')
+    console.log("SignUp data submitted:", data);
+    // Add sign-up logic here (e.g., API call)
+    // Redirect to login or home after successful sign-up
+    history.push("/");
   };
 
   const cancel = () => {
+    reset(); // clears form fields
     history.push("/");
-    // reset({ email: "", password: "" });
   };
+
   return (
     <div className="container">
       <div className="login-container">
@@ -30,10 +31,10 @@ function SignUp({}) {
                 control={control}
                 label="First Name"
                 name="firstName"
-                placeholder="Enter a first name"
+                placeholder="Enter your first name"
                 type="text"
                 fieldClass="form-control"
-                rules={{ required: true }}
+                rules={{ required: "First name is required" }}
               />
             </div>
 
@@ -42,10 +43,10 @@ function SignUp({}) {
                 control={control}
                 label="Last Name"
                 name="lastName"
-                placeholder="Enter a last name"
+                placeholder="Enter your last name"
                 type="text"
                 fieldClass="form-control"
-                rules={{ required: true }}
+                rules={{ required: "Last name is required" }}
               />
             </div>
 
@@ -54,10 +55,10 @@ function SignUp({}) {
                 control={control}
                 label="Email Address"
                 name="email"
-                placeholder="Enter an email"
+                placeholder="Enter your email"
                 type="email"
                 fieldClass="form-control"
-                rules={{ required: true }}
+                rules={{ required: "Email is required" }}
               />
             </div>
 
@@ -66,22 +67,22 @@ function SignUp({}) {
                 control={control}
                 label="Password"
                 name="password"
-                placeholder="Enter a Password"
+                placeholder="Enter your password"
                 type="password"
                 fieldClass="form-control"
-                rules={{ required: true }}
+                rules={{ required: "Password is required" }}
               />
             </div>
 
             <div className="mb-3">
               <InputField
                 control={control}
-                label="Phone Number"
-                name="phoneNumber"
-                placeholder="xxx-xxx-xxxx"
-                type="number"
+                label="Confirm Password"
+                name="confirmPassword"
+                placeholder="Repeat your password"
+                type="password"
                 fieldClass="form-control"
-                rules={{ required: true }}
+                rules={{ required: "Please confirm your password" }}
               />
             </div>
 
@@ -89,23 +90,22 @@ function SignUp({}) {
               <div className="filter-result-block mb-3 col-3">
                 <Button className="cancel-filter" onClick={cancel}>
                   Cancel
-                </Button>{" "}
+                </Button>
               </div>
               <div className="filter-result-block mb-3 col-3">
                 <Button type="submit" className="apply-filter">
-                  SignUp
-                </Button>{" "}
+                  Sign Up
+                </Button>
               </div>
             </div>
           </form>
 
-          <div className="mb-3">
+          <div className="text-center mt-3">
             <p>
               Already have an account?{" "}
-              <Link className="login-link" to="/login">
+              <Link to="/login" className="link-primary">
                 Login
-              </Link>{" "}
-              now
+              </Link>
             </p>
           </div>
         </div>
