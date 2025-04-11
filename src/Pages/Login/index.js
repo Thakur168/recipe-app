@@ -44,7 +44,10 @@ function Login({}) {
                 placeholder="Enter your Password here"
                 type="password"
                 fieldClass="form-control"
-                rules={{ required: true }}
+                rules={{ required: {
+                  required : true,
+                  message: "Password is required"
+                } }}
               />
             </div>
 

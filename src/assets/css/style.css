@@ -15,10 +15,10 @@ body {
     font-size: 28px !important;
 }
 
-.navbar-brand:hover {
+/* .navbar-brand:hover {
     color: white;
     text-shadow: 0 0 1px white;
-}
+} */
 
 #navbarNav {
     justify-content: center !important;
@@ -508,6 +508,11 @@ footer h3 {
     color: white;
     font-size: 15px;
     transition: color 0.3s;
+}
+
+.error-msg{
+    color: red;
+    font-size: 10px;
 }
 
 .footer_content ul li a:hover {
