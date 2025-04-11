@@ -1,23 +1,40 @@
 import { Button } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { Link, useHistory } from "react-router-dom";
-
 import InputField from "../../Components/FormFields/InputField";
+import { useState } from "react";
 
 function SignUp() {
-  const { handleSubmit, control, reset } = useForm();
+  const {
+    handleSubmit,
+    control,
+    reset,
+    getValues,
+    formState: { errors },
+  } = useForm();
   const history = useHistory();
 
+  const [showPassword, setShowPassword] = useState(false);
+
   const onSubmit = (data) => {
-    console.log("SignUp data submitted:", data);
-    // Add sign-up logic here (e.g., API call)
-    // Redirect to login or home after successful sign-up
-    history.push("/");
+    const users = JSON.parse(localStorage.getItem("users")) || [];
+    const userExists = users.some((u) => u.email === data.email);
+
+    if (userExists) {
+      alert("User already exists");
+    } else {
+      localStorage.setItem("users", JSON.stringify([...users, data]));
+      alert("Signup successful");
+      history.push("/");
+    }
   };
 
   const cancel = () => {
-    reset(); // clears form fields
-    history.push("/");
+    reset();
+  };
+
+  const goHome = () => {
+    history.push("/home");
   };
 
   return (
@@ -31,83 +48,85 @@ function SignUp() {
                 control={control}
                 label="First Name"
                 name="firstName"
-                placeholder="Enter your first name"
-                type="text"
-                fieldClass="form-control"
-                rules={{ required: "First name is required" }}
+                rules={{ required: "First Name is required" }}
               />
             </div>
-
             <div className="mb-3">
               <InputField
                 control={control}
                 label="Last Name"
                 name="lastName"
-                placeholder="Enter your last name"
-                type="text"
-                fieldClass="form-control"
-                rules={{ required: "Last name is required" }}
+                rules={{ required: "Last Name is required" }}
               />
             </div>
-
             <div className="mb-3">
               <InputField
                 control={control}
-                label="Email Address"
+                label="Email"
                 name="email"
-                placeholder="Enter your email"
-                type="email"
-                fieldClass="form-control"
-                rules={{ required: "Email is required" }}
+                rules={{
+                  required: "Email is required",
+                  pattern: {
+                    value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                    message: "Invalid email format",
+                  },
+                }}
               />
             </div>
-
             <div className="mb-3">
               <InputField
                 control={control}
                 label="Password"
                 name="password"
-                placeholder="Enter your password"
-                type="password"
-                fieldClass="form-control"
-                rules={{ required: "Password is required" }}
+                type={showPassword ? "text" : "password"}
+                rules={{
+                  required: "Password is required",
+                  minLength: {
+                    value: 6,
+                    message: "Password must be at least 6 characters",
+                  },
+                }}
               />
             </div>
-
             <div className="mb-3">
               <InputField
                 control={control}
                 label="Confirm Password"
                 name="confirmPassword"
-                placeholder="Repeat your password"
-                type="password"
-                fieldClass="form-control"
-                rules={{ required: "Please confirm your password" }}
+                type={showPassword ? "text" : "password"}
+                rules={{
+                  required: "Confirm Password is required",
+                  validate: (value) =>
+                    value === getValues("password") || "Passwords do not match",
+                }}
               />
             </div>
-
-            <div className="row">
-              <div className="filter-result-block mb-3 col-3">
-                <Button className="cancel-filter" onClick={cancel}>
-                  Cancel
-                </Button>
-              </div>
-              <div className="filter-result-block mb-3 col-3">
-                <Button type="submit" className="apply-filter">
-                  Sign Up
-                </Button>
-              </div>
+            <div className="form-check mb-3">
+              <input
+                type="checkbox"
+                className="form-check-input"
+                onChange={() => setShowPassword(!showPassword)}
+                id="showPasswordToggle"
+              />
+              <label className="form-check-label" htmlFor="showPasswordToggle">
+                Show Password
+              </label>
+            </div>
+            <div className="d-grid gap-2">
+              <Button variant="primary" type="submit">
+                Sign Up
+              </Button>
+              <Button variant="secondary" onClick={cancel}>
+                Cancel
+              </Button>
+              <Button variant="outline-secondary" onClick={goHome}>
+                Go to Home
+              </Button>
+            </div>
+            <div className="mt-3 text-center">
+              <Link to="/">Already have an account? Login</Link>
             </div>
           </form>
-
-          <div className="text-center mt-3">
-            <p>
-              Already have an account?{" "}
-              <Link to="/login" className="link-primary">
-                Login
-              </Link>
-            </p>
-          </div>
         </div>
       </div>
     </div>
