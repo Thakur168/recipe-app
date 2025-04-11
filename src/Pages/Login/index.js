@@ -2,21 +2,39 @@ import { Button } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { Link, useHistory } from "react-router-dom";
 import InputField from "../../Components/FormFields/InputField";
+import { useState } from "react";
 
 function Login() {
-  const { handleSubmit, control, reset } = useForm();
+  const {
+    handleSubmit,
+    control,
+    reset,
+    formState: { errors },
+  } = useForm();
   const history = useHistory();
+  const [showPassword, setShowPassword] = useState(false);
 
   const onSubmit = (data) => {
-    // You can handle login logic here (e.g., API call)
-    console.log("Login data submitted:", data);
-    // Redirect to home page after login
-    history.push("/");
+    const users = JSON.parse(localStorage.getItem("users")) || [];
+    const validUser = users.find(
+      (u) => u.email === data.email && u.password === data.password
+    );
+
+    if (validUser) {
+      localStorage.setItem("user", JSON.stringify(validUser));
+      history.push("/home");
+    } else {
+      alert("Invalid credentials");
+    }
+    return;
   };
 
   const cancel = () => {
-    reset(); // clears form fields
-    history.push("/"); // navigates back to home
+    reset();
+  };
+
+  const goHome = () => {
+    history.push("/home");
   };
 
   return (
@@ -28,12 +46,15 @@ function Login() {
             <div className="mb-3">
               <InputField
                 control={control}
-                label="Email Address"
+                label="Email"
                 name="email"
-                placeholder="Enter the login email"
-                type="email"
-                fieldClass="form-control"
-                rules={{ required: "Email is required" }}
+                rules={{
+                  required: "Email is required",
+                  pattern: {
+                    value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                    message: "Invalid email format",
+                  },
+                }}
               />
             </div>
             <div className="mb-3">
@@ -41,27 +62,34 @@ function Login() {
                 control={control}
                 label="Password"
                 name="password"
-                placeholder="Enter your password"
-                type="password"
-                fieldClass="form-control"
-                rules={{ required: "Password is required" }}
+                type={showPassword ? "text" : "password"}
+                rules={{
+                  required: "Password is required",
+                  minLength: {
+                    value: 6,
+                    message: "Password must be at least 6 characters",
+                  },
+                }}
               />
             </div>
-            <div className="row">
-              <div className="filter-result-block mb-3 col-3">
-                <Button className="cancel-filter" onClick={cancel}>
-                  Cancel
-                </Button>
-              </div>
-              <div className="filter-result-block mb-3 col-3">
-                <Button type="submit" className="apply-filter">
-                  Login
-                </Button>
-              </div>
+            <div className="form-check mb-3">
+              <input
+                type="checkbox"
+                className="form-check-input"
+                onChange={() => setShowPassword(!showPassword)}
+                id="showPasswordToggle"
+              />
+              <label className="form-check-label" htmlFor="showPasswordToggle">
+                Show Password
+              </label>
             </div>
-            <div className="text-center mt-3">
-              <span>Don't have an account? </span>
-              <Link to="/register">Register here</Link>
+            <div className="d-grid gap-2">
+              <Button variant="primary" type="submit">Login</Button>
+              <Button variant="secondary" onClick={cancel}>Cancel</Button>
+              <Button variant="outline-secondary" onClick={goHome}>Go to Home</Button>
+            </div>
+            <div className="mt-3 text-center">
+              <Link to="/signup">Don't have an account? Sign Up</Link>
             </div>
           </form>
         </div>
