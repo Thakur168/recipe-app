@@ -14,9 +14,10 @@ function TableData({ _recipe, index, setRecipe, recipes }) {
   const history = useHistory();
 
   const onHideModel = () => {
-    localStorage.setItem("recipes", JSON.stringify(recipes));
+    const afterDelete = recipes?.filter((recp) => recp?.id != id);
+    localStorage.setItem("recipes", JSON.stringify(afterDelete));
     setIsDelete(false);
-  }
+  };
 
   const onEditClick = (id) => {
     history.push(`/recipe/edit/${id}`);

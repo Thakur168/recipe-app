@@ -119,16 +119,6 @@ function Login() {
               </div>
             </div>
           </form>
-
-          <div className="mb-3">
-            <p>
-              Don't have an account?{" "}
-              <Link className="signup-link" to="/signup">
-                Sign Up
-              </Link>{" "}
-              now
-            </p>
-          </div>
         </div>
       </div>
     </div>

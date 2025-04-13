@@ -2,11 +2,11 @@ import { useState } from "react";
 import { Button } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { Link, useHistory } from "react-router-dom";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import toast from "react-hot-toast";
 
-function SignUp({}) {
+function SignUp() {
   // use hooks
   const {
     register,
@@ -14,9 +14,10 @@ function SignUp({}) {
     formState: { errors },
     reset,
   } = useForm();
-  const [showPassword, setShowPassword] = useState(false);
 
   const history = useHistory();
+
+  const [showPassword, setShowPassword] = useState(false);
 
   const onSubmit = (data) => {
     const users = JSON.parse(localStorage.getItem("users")) || [];
@@ -40,7 +41,9 @@ function SignUp({}) {
       <div className="login-container">
         <div className="col-md-5 ms-md-auto loginDiv">
           <h2 className="pageName text-center">Sign Up</h2>
-          <p className="text-center">Enter your details to register into our website </p>
+          <p className="text-center">
+            Enter your details to register into our website{" "}
+          </p>
           <form onSubmit={handleSubmit(onSubmit)}>
             <div className="mb-3">
               <div className="form-group">
@@ -55,12 +58,13 @@ function SignUp({}) {
                     })}
                   />
                   {errors?.firstName && (
-                    <span className="error-msg">{errors?.firstName?.message}</span>
+                    <span className="error-msg">
+                      {errors?.firstName?.message}
+                    </span>
                   )}
                 </div>
               </div>
             </div>
-
             <div className="mb-3">
               <div className="form-group">
                 <label className="mb-1">Last Name</label>
@@ -81,7 +85,6 @@ function SignUp({}) {
                 </div>
               </div>
             </div>
-
             <div className="mb-3">
               <div className="form-group">
                 <label className="mb-1">Email Address</label>
@@ -105,7 +108,6 @@ function SignUp({}) {
                 </div>
               </div>
             </div>
-
             <div className="mb-3">
               <div className="form-group">
                 <label className="mb-1">Password</label>
@@ -142,7 +144,6 @@ function SignUp({}) {
                 </div>
               </div>
             </div>
-
             <div className="mb-3">
               <div className="form-group">
                 <label className="mb-1">Phone Number</label>
@@ -168,30 +169,23 @@ function SignUp({}) {
                 </div>
               </div>
             </div>
-
+          
             <div className="row">
               <div className="filter-result-block mb-3 col-3">
-                <Button className="cancel-filter" onClick={cancel}>
+                <Button className="cancel-filter" onClick={() => history.push("/")}>
                   Cancel
                 </Button>{" "}
               </div>
               <div className="filter-result-block mb-3 col-3">
                 <Button type="submit" className="apply-filter">
-                  SignUp
+                  Sign Up
                 </Button>{" "}
               </div>
             </div>
+            <div className="mt-3 text-center">
+              <Link className="login-link" to="/login">Already have an account? Login</Link>
+            </div>
           </form>
-
-          <div className="mb-3">
-            <p>
-              Already have an account?{" "}
-              <Link className="login-link" to="/login">
-                Login
-              </Link>{" "}
-              now
-            </p>
-          </div>
         </div>
       </div>
     </div>

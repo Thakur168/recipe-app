@@ -160,16 +160,16 @@ function RecipeDetail() {
             <h4>Nutrition</h4>
             <ul className="list-unstyled">
               <li>
-                <strong>Calories:</strong> {recipe?.nutrition?.calories}
+                <strong>Calories:</strong> {recipe?.nutrition?.calories || "---"}
               </li>
               <li>
-                <strong>Fat:</strong> {recipe?.nutrition?.fat}
+                <strong>Fat:</strong> {recipe?.nutrition?.fat || "---"}
               </li>
               <li>
-                <strong>Carbs:</strong> {recipe?.nutrition?.carbs}
+                <strong>Carbs:</strong> {recipe?.nutrition?.carbs || "---"}
               </li>
               <li>
-                <strong>Protein:</strong> {recipe?.nutrition?.protein}
+                <strong>Protein:</strong> {recipe?.nutrition?.protein || "---"}
               </li>
             </ul>
 
