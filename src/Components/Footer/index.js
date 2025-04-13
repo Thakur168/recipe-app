@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom/cjs/react-router-dom.min";
+import { Link } from "react-router-dom/cjs/react-router-dom";
 
 function Footer() {
   return (
@@ -10,8 +10,8 @@ function Footer() {
                     <h3>The Recipe Vault</h3>
                     <ul>
                         <li><Link to="/">Home</Link></li>
-                        <li><Link href="recipes">Recipes</Link></li>
-                        <li><Link href="about-us">About Us</Link></li>
+                        <li><Link to="recipes">Recipes</Link></li>
+                        <li><Link to="about-us">About Us</Link></li>
                     </ul>
                 </div>
                 <div className="content col text-center">
@@ -28,7 +28,7 @@ function Footer() {
                         <li><p>Priya Thakur (8958634)</p></li>
                         <li><p>Hari Karnan (8925421)</p></li>
                         <li><p>Vijay Prakash (8962818)</p></li>
-                        <li><p>Venkat Reddy ()</p></li>
+                        <li><p>Venkat Reddy (8982817)</p></li>
                     </ul>
                 </div>
             </div>

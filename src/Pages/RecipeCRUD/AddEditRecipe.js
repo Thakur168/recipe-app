@@ -1,56 +1,66 @@
-import { useEffect } from "react";
-import { useForm } from "react-hook-form";
-import { useParams } from "react-router-dom";
-import { v4 as uuidv4 } from "uuid";
-
+import React, { useEffect } from "react";
+import { useForm, Controller } from "react-hook-form";
+import { useHistory, useParams } from "react-router-dom";
 import { Button } from "react-bootstrap";
-import InputField from "../../Components/FormFields/InputField";
-import TextAreaField from "../../Components/FormFields/TextAreaField";
-import { useHistory } from "react-router-dom/cjs/react-router-dom";
-
+import { v4 as uuidv4 } from "uuid";
+import { CATEGORY } from "../../constant";
 
 function AddEditRecipe() {
-  // use hooks
   const {
     control,
     handleSubmit,
     setValue,
+    register,
+    formState: { errors },
   } = useForm();
 
   const history = useHistory();
   const { id } = useParams();
-  
+
   const cancel = () => {
-    history.push('/recipe-list');
-};
-
-  // on form submissions
-  const onSubmit = (formData) => {
-    let data =
-      localStorage.getItem("data") != undefined ||
-        localStorage.getItem("data") != null
-        ? JSON.parse(localStorage.getItem("data"))
-        : [];
-
-    if (id) {
-      const foundIndex = data?.findIndex((_data) => _data?.id == id);
-      if (foundIndex > -1) {
-        data[foundIndex] = { id, ...formData };
-        localStorage.setItem("data", JSON.stringify(data));
-      }
-    } else {
-      const id = uuidv4();
-      data.unshift({ id, ...formData });
-      localStorage.setItem("data", JSON.stringify(data));
-    }
     history.push("/recipe-list");
   };
 
+  // Handle form submission
+  const onSubmit = (formData) => {
+    const recipes = JSON.parse(localStorage.getItem("recipes")) || [];
+
+    if (id) {
+      const index = recipes.findIndex((recipe) => recipe.id === id);
+      if (index > -1) {
+        recipes[index] = { id, ...formData };
+        localStorage.setItem("recipes", JSON.stringify(recipes));
+      }
+    } else {
+      const newId = uuidv4();
+      recipes.unshift({ id: newId, ...formData });
+      localStorage.setItem("recipes", JSON.stringify(recipes));
+      
+    }
+
+    history.push("/recipe-list");
+  };
+
+  // Prefill form values for editing
   const setValues = (id) => {
-    const data = JSON.parse(localStorage.getItem("data"));
-    const foundData = data?.find((_data) => _data?.id == id);
-    if (Object.keys(foundData)?.length > 0) {
-      setValue("name", foundData?.name);
+    const recipes = JSON.parse(localStorage.getItem("recipes"));
+    const recipe = recipes.find((r) => r.id === id);
+   
+    if (recipe) {
+      setValue("recipeName", recipe.recipeName);
+      setValue("description", recipe.description);
+      setValue("categoryId", recipe.categoryId);
+      setValue("ingredients", [recipe.ingredients].join("\n"));
+      setValue("prepTime", recipe.prepTime);
+      setValue("cookTime", recipe.cookTime);
+      setValue("totalTime", recipe.totalTime);
+      setValue("servings", recipe.servings);
+      setValue("difficulty", recipe.difficulty);
+      setValue("nutrition", recipe.nutrition);
+      setValue("tags", [recipe.tags].join(", "));
+      setValue("author", recipe.author);
+      setValue("tips", [recipe.tips].join("\n"));
+      setValue("instructions", [recipe.instructions].join("\n"));
     }
   };
 
@@ -62,90 +72,243 @@ function AddEditRecipe() {
     <div className="login-container">
       <div className="container">
         <div className="col-md-8 m-md-auto loginDiv">
-          <h2 className="pageName text-center">Add Recipe</h2>
-          <form name="filter" onSubmit={handleSubmit(onSubmit)}>
+          <h2 className="pageName text-center">
+            {id ? "Edit Recipe" : "Add Recipe"}
+          </h2>
+          <form onSubmit={handleSubmit(onSubmit)}>
             <div className="row">
               <div className="mb-3">
-                <InputField
-                  control={control}
-                  label="Recipe Name"
-                  name="name"
+                <label>Recipe Name</label>
+                <input
+                  className="form-control"
                   type="text"
-                  fieldClass="form-control"
-                  placeholder="Enter Recipe Name"
-                  rules={{
-                    required: {
-                      value: true,
-                      message: "Recipe Name is required",
-                    },
-                  }}
+                  placeholder="Recipe Name"
+                  {...register("recipeName", {
+                    required: "Recipe name is required",
+                  })}
                 />
-              </div>
-
-              {/* <div className="mb-3">
-                <InputField
-                  control={control}
-                  label="Sub Title"
-                  name="subTitle"
-                  type="text"
-                  placeholder="Sub Title"
-                  minValue={0}
-                  fieldClass="form-control"
-                  rules={{
-                    required: {
-                      value: true,
-                      message: "Give a sub title",
-                    },
-                  }}
-                />
-              </div> */}
-
-              <div className="col-9 mb-3">
-                <InputField
-                  control={control}
-                  label="Recipe Image"
-                  name="recipeImage"
-                  type="file"
-                  placeholder="Upload an image here"
-                  minValue={0}
-                  fieldClass="form-control"
-                  rules={{
-                    required: {
-                      value: true,
-                      message: "Provide an image for your recipe",
-                    },
-                  }}
-                />
+                {errors.recipeName && (
+                  <span className="text-danger">
+                    {errors.recipeName.message}
+                  </span>
+                )}
               </div>
 
               <div className="mb-3">
-                <TextAreaField
-                  control={control}
-                  label="Recipe description"
-                  name="description"
-                  placeholder="Recipe description"
+                <label className="mb-1">Description</label>
+                <div className="textfield-block">
+                  <textarea
+                    className="form-control"
+                    type="text"
+                    placeholder="Description"
+                    {...register("description", {
+                      required: "Description is required",
+                    })}
+                  ></textarea>
+                </div>
+                {errors.description && (
+                  <span className="text-danger">
+                    {errors.description.message}
+                  </span>
+                )}
+              </div>
+
+              <div className="mb-3">
+                <label htmlFor="category" className="form-label">
+                  Category:
+                </label>
+                <select
+                  className="form-control"
+                  {...register("categoryId", {
+                    required: "Category is required",
+                  })}
+                >
+                  <option value="">All Categories</option>
+                  {CATEGORY &&
+                    CATEGORY?.map((_category, index) => (
+                      <option key={index} value={_category?.id}>
+                        {_category?.categoryName}
+                      </option>
+                    ))}
+                </select>
+                {errors.categoryId && (
+                  <span className="text-danger">
+                    {errors.categoryId.message}
+                  </span>
+                )}
+              </div>
+
+              <div className="mb-3">
+                <label>Ingredients</label>
+                <textarea
+                  className="form-control"
                   type="text"
-                  rows="10"
-                  fieldClass="form-control"
-                  rules={{
-                    required: {
-                      value: true,
-                      message: "Recipe description is required",
-                    },
-                  }}
+                  placeholder="Ingredients (one per line)"
+                  {...register("ingredients", {
+                    required: "ingredients are required",
+                  })}
+                  rows="5"
+                ></textarea>
+                {errors.ingredients && (
+                  <span className="text-danger">
+                    {errors.ingredients.message}
+                  </span>
+                )}
+              </div>
+
+              <div className="mb-3">
+                <label>Preparation Time</label>
+                <input
+                  className="form-control"
+                  type="text"
+                  placeholder="Preparation Time"
+                  {...register("prepTime", {
+                    required: "Preparation Time is required",
+                  })}
                 />
+                {errors.prepTime && (
+                  <span className="text-danger">{errors.prepTime.message}</span>
+                )}
+              </div>
+
+              <div className="mb-3">
+                <label>Cooking Time</label>
+                <input
+                  className="form-control"
+                  type="text"
+                  placeholder="Cooking Time"
+                  {...register("cookTime", {
+                    required: "Cooking Time is required",
+                  })}
+                />
+                {errors.cookTime && (
+                  <span className="text-danger">{errors.cookTime.message}</span>
+                )}
+              </div>
+
+              <div className="mb-3">
+                <label>Total Time</label>
+                <input
+                  className="form-control"
+                  type="text"
+                  placeholder="Total Time"
+                  {...register("totalTime", {
+                    required: "Total Time is required",
+                  })}
+                />
+                {errors.totalTime && (
+                  <span className="text-danger">
+                    {errors.totalTime.message}
+                  </span>
+                )}
+              </div>
+
+              <div className="mb-3">
+                <label>Servings</label>
+                <input
+                  className="form-control"
+                  type="text"
+                  placeholder="Number of Servings"
+                  {...register("servings", {
+                    required: "Servings are required",
+                  })}
+                />
+                {errors.servings && (
+                  <span className="text-danger">{errors.servings.message}</span>
+                )}
+              </div>
+
+              <div className="mb-3">
+                <label>Difficulty</label>
+                <input
+                  className="form-control"
+                  type="text"
+                  placeholder="Difficulty Level"
+                  {...register("difficulty", {
+                    required: "Difficulty Level are required",
+                  })}
+                />
+                {errors.difficulty && (
+                  <span className="text-danger">
+                    {errors.difficulty.message}
+                  </span>
+                )}
+              </div>
+
+              <div className="mb-3">
+                <label>Tags</label>
+                <input
+                  className="form-control"
+                  type="text"
+                  placeholder="Tags (comma separated)"
+                  {...register("tags", {
+                    required: "Tags are required",
+                  })}
+                />
+                {errors.tags && (
+                  <span className="text-danger">{errors.tags.message}</span>
+                )}
+              </div>
+
+              <div className="mb-3">
+                <label>Author</label>
+                <input
+                  className="form-control"
+                  type="text"
+                  placeholder="Author's Name"
+                  {...register("author", {
+                    required: "Author is required",
+                  })}
+                />
+                {errors.author && (
+                  <span className="text-danger">{errors.author.message}</span>
+                )}
+              </div>
+
+              <div className="mb-3">
+                <label>Tips</label>
+                <textarea
+                  className="form-control"
+                  type="text"
+                  placeholder="Tips (one per line)"
+                  {...register("tips", {
+                    required: false,
+                  })}
+                  rows="5"
+                ></textarea>
+                {errors.tips && (
+                  <span className="text-danger">{errors.tips.message}</span>
+                )}
+              </div>
+
+              <div className="mb-3">
+                <label>Instructions</label>
+                <textarea
+                  className="form-control"
+                  type="text"
+                  placeholder="Instructions (one per line)"
+                  {...register("instructions", {
+                    required: "Instructions are required",
+                  })}
+                  rows="5"
+                ></textarea>
+                {errors.instructions && (
+                  <span className="text-danger">
+                    {errors.instructions.message}
+                  </span>
+                )}
               </div>
 
               <div className="row">
                 <div className="filter-result-block mb-3 col-3">
                   <Button className="cancelBtn" onClick={cancel}>
                     Cancel
-                  </Button>{" "}
+                  </Button>
                 </div>
                 <div className="filter-result-block mb-3 col-3">
                   <Button type="submit" className="loginBtn">
-                    Add
-                  </Button>{" "}
+                    {id ? "Update Recipe" : "Add Recipe"}
+                  </Button>
                 </div>
               </div>
             </div>

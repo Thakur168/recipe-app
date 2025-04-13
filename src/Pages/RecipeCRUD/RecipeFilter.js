@@ -4,14 +4,15 @@ import { useLocation, useNavigate } from "react-router-dom";
 import queryString from "query-string";
 import InputField from "../../Components/FormFields/InputField";
 import { removeEmptyFields } from "../../Components/Common/utilities";
-import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
+import { CATEGORY } from "../../constant";
+import { useHistory } from "react-router-dom/cjs/react-router-dom";
 
 function RecipeFilter({ getFilterFields }) {
   const { search } = useLocation();
   const searchValue = queryString.parse(search);
 
   // use hooks
-  const { handleSubmit, control, reset } = useForm({
+  const { register, handleSubmit, reset } = useForm({
     defaultValues: { ...searchValue },
   });
 
@@ -31,7 +32,7 @@ function RecipeFilter({ getFilterFields }) {
       search: "",
     });
     getFilterFields({});
-    reset({ name: "" });
+    reset({ name: "", category: "" });
   };
 
   return (
@@ -40,14 +41,41 @@ function RecipeFilter({ getFilterFields }) {
         <div className="row mb-3 filter-row p-4">
           <h5>Filters</h5>
           <div className="col-5">
-            <InputField
-              control={control}
-              label="Name"
-              name="name"
-              placeholder="Name"
-              type="text"
-              fieldClass="form-control"
-            />
+            <div className="form-group">
+              <label className="mb-1">Recipe Name</label>
+              <div className="textfield-block">
+                <input
+                  className="form-control"
+                  type="text"
+                  placeholder="Recipe name"
+                  {...register("recipeName", {
+                    required: false,
+                  })}
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className="col-5">
+            <label htmlFor="category" className="form-label">
+              Category:
+            </label>
+            <select
+              name="category"
+              id="category"
+              className="form-control"
+              {...register("categoryId", {
+                required: false,
+              })}
+            >
+              <option value="">All Categories</option>
+              {CATEGORY &&
+                CATEGORY?.map((_category, index) => (
+                  <option key={index} value={_category?.id}>
+                    {_category?.categoryName}
+                  </option>
+                ))}
+            </select>
           </div>
 
           <div className="col-2 text-end">

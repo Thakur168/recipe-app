@@ -1,6 +1,5 @@
 // Page created by Priya Thakur (8958634)
 
-import { Link } from "react-router-dom/cjs/react-router-dom.min";
 import {
   BANNERS,
   BANNERSLIDERSETTING,
@@ -12,17 +11,16 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import RecipeCard from "../../Components/RecipeCard";
+import { useState } from "react";
+import { Link } from "react-router-dom/cjs/react-router-dom";
 
 function Home() {
+  const [recipes, setRecipes] = useState(
+    JSON.parse(localStorage.getItem("recipes")) || RECIPES
+  );
+
   return (
     <main id="main-content">
-      {/* <section className="banner">
-        <div className="banner-content container">
-          <h1 className="mt-4">Savor the Flavor!</h1>
-          <p>Delicious recipes for every occasion.</p>
-        </div>
-      </section> */}
-
       <section className="">
         <Slider
           {...{
@@ -81,10 +79,23 @@ function Home() {
           <h2 className="text-center mb-10">Featured Recipes</h2>
           <div className="row">
             <Slider {...{ ...SLIDERSETTING, slidesToShow: 4 }}>
-              {RECIPES?.length > 0 &&
-                RECIPES?.slice(0,6).map((_recipe, index) => (
-                  <RecipeCard index={index} recipe={_recipe} page="home"/>
-                ))}
+              {recipes?.length > 0 &&
+                recipes?.slice(0, 6).map((_recipe, index) => {
+                  const category = CATEGORY.find(
+                    (cat) => cat.id == _recipe.categoryId
+                  );
+                  const recipeWithCategory = {
+                    ..._recipe,
+                    categoryName: category?.categoryName || "Unknown",
+                  };
+                  return (
+                    <RecipeCard
+                      index={index}
+                      recipe={recipeWithCategory}
+                      page="home"
+                    />
+                  );
+                })}
             </Slider>
           </div>
         </div>

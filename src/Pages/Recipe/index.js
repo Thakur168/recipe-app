@@ -2,30 +2,32 @@
 
 import { useState, useEffect } from "react";
 import RecipeCard from "../../Components/RecipeCard";
-import { RECIPES } from "../../constant";
+import { CATEGORY, RECIPES} from "../../constant";
 import InfiniteScroll from "react-infinite-scroll-component";
+import { useParams } from "react-router-dom/cjs/react-router-dom";
 
 function Recipe() {
+  const [allrecipes, setAllRecipes] = useState(JSON.parse(localStorage.getItem("recipes")) || RECIPES)
   const [displayedRecipes, setDisplayedRecipes] = useState([]);
-  const [hasMore, setHasMore] = useState(true);
+  const [hasMore, setHasMore] = useState(false);
   const [loading, setLoading] = useState(false);
   const [filterName, setFilterName] = useState("");
   const [filterCategory, setFilterCategory] = useState("");
-
+  const { categoryId } = useParams();
   const recipesPerPage = 5;
-  const [filteredRecipes, setFilteredRecipes] = useState(RECIPES);
+  const [filteredRecipes, setFilteredRecipes] = useState(allrecipes);
 
-  const applyFilters = () => {
-    let result = RECIPES;
+  const applyFilters = (filterName, categoryId) => {
+    let result = [...allrecipes];
 
     if (filterName) {
       result = result.filter((recipe) =>
         recipe.recipeName.toLowerCase().includes(filterName.toLowerCase())
       );
     }
-
-    if (filterCategory) {
-      result = result.filter((recipe) => recipe.category === filterCategory);
+   
+    if (categoryId) {
+      result = result.filter((recipe) => recipe.categoryId == categoryId);
     }
 
     setFilteredRecipes(result);
@@ -55,8 +57,8 @@ function Recipe() {
   };
 
   const applyFiltersOnClick = (e) => {
-    e.preventDefault();
-    applyFilters();
+    if (e) e.preventDefault();
+    applyFilters(filterName, filterCategory);
     setDisplayedRecipes(filteredRecipes.slice(0, recipesPerPage));
     setHasMore(true);
   };
@@ -64,8 +66,8 @@ function Recipe() {
   const resetFilters = () => {
     setFilterName("");
     setFilterCategory("");
-    setDisplayedRecipes(RECIPES.slice(0, recipesPerPage));
-    setFilteredRecipes(RECIPES);
+    setDisplayedRecipes(allrecipes.slice(0, recipesPerPage));
+    setFilteredRecipes(allrecipes);
     setHasMore(true);
   };
 
@@ -73,6 +75,15 @@ function Recipe() {
     setDisplayedRecipes(filteredRecipes.slice(0, recipesPerPage));
     setHasMore(true);
   }, [filteredRecipes]);
+
+  useEffect(() => {
+    if (categoryId) {
+      setFilterCategory(categoryId);
+      applyFilters("", categoryId);
+      setDisplayedRecipes(filteredRecipes.slice(0, recipesPerPage));
+      setHasMore(true);
+    }
+  }, [categoryId]);
 
   return (
     <main id="recipe-main">
@@ -106,14 +117,12 @@ function Recipe() {
                 onChange={(e) => setFilterCategory(e.target.value)}
               >
                 <option value="">All Categories</option>
-                <option value="Breakfast">Breakfast</option>
-                <option value="Lunch">Lunch</option>
-                <option value="Dinner">Dinner</option>
-                <option value="Desert">Desert</option>
-                <option value="Quick & Easy">Quick & Easy</option>
-                <option value="Healthy & Low-Calorie">
-                  Healthy & Low-Calorie
-                </option>
+                {CATEGORY &&
+                  CATEGORY?.map((_category, index) => (
+                    <option key={index} value={_category?.id}>
+                      {_category?.categoryName}
+                    </option>
+                  ))}
               </select>
             </div>
 
@@ -148,9 +157,17 @@ function Recipe() {
           >
             <div className="row">
               {displayedRecipes.length > 0 &&
-                displayedRecipes.map((_recipe, index) => (
-                  <RecipeCard key={index} index={index} recipe={_recipe} />
-                ))}
+                displayedRecipes.map((_recipe, index) => {
+                  const category = CATEGORY.find(cat => cat.id == _recipe.categoryId);
+                  const recipeWithCategory = {
+                    ..._recipe,
+                    categoryName: category?.categoryName || "Unknown",
+                  };
+              
+                  return (
+                    <RecipeCard key={index} index={index} recipe={recipeWithCategory} />
+                  );
+                })}
             </div>
           </InfiniteScroll>
         </section>

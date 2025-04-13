@@ -1,11 +1,43 @@
-// Page created by Priya Thakur (8958634)
-
 import { useParams } from "react-router-dom";
-import { RECIPES } from "../../constant";
+import { useEffect, useState } from "react";
+import placeholder from "../../assets/images/placeholder_image.png";
+import { CATEGORY } from "../../constant";
 
 function RecipeDetail() {
+  const [recipes, setRecipes] = useState(
+    JSON.parse(localStorage.getItem("recipes"))
+  );
+  const [recipe, setRecipe] = useState(null);
   const { id } = useParams();
-  const recipe = RECIPES.find((r) => r.id == parseInt(id));
+
+  useEffect(() => {
+    if (recipes) {
+      let recipe = recipes.find((r) => r.id == id);
+      if (recipe) {
+        if (!Array.isArray(recipe.instructions)) {
+          recipe.instructions = recipe.instructions.split("\n").filter(Boolean);
+        }
+
+        if (!Array.isArray(recipe.ingredients)) {
+          recipe.ingredients = recipe.ingredients.split("\n").filter(Boolean);
+        }
+
+        if (!Array.isArray(recipe.tips)) {
+          recipe.tips = recipe.tips
+            .split(/\n|,/)
+            .map((t) => t.trim())
+            .filter(Boolean);
+        }
+
+        const category = CATEGORY.find(
+          (category) => category?.id == recipe?.categoryId
+        );
+        recipe.categoryName = category?.categoryName;
+
+        setRecipe(recipe);
+      }
+    }
+  }, [id, recipes]);
 
   if (!recipe) {
     return <div>Recipe not found!</div>;
@@ -17,7 +49,7 @@ function RecipeDetail() {
         <div className="col-md-5">
           <div className="text-center">
             <img
-              src={recipe.url}
+              src={recipe.url ? recipe.url : placeholder}
               alt={recipe.recipeName}
               className="img-fluid rounded shadow-sm recipe-img"
             />
@@ -26,9 +58,39 @@ function RecipeDetail() {
 
         <div className="col-md-7">
           <h1 className="mb-3" id="recipe-name">
-            {recipe.recipeName}
+            {recipe.recipeName} ({recipe.categoryName})
           </h1>
+
           <p className="mb-4">{recipe.description}</p>
+
+          <h4>Recipe Time & Serving</h4>
+          <table className="table table-bordered">
+            <tbody>
+              <tr>
+                <th scope="row">Servings</th>
+                <td>{recipe.servings}</td>
+              </tr>
+              <tr>
+                <th scope="row">Prep Time</th>
+                <td>{recipe.prepTime}</td>
+              </tr>
+              <tr>
+                <th scope="row">Cook Time</th>
+                <td>{recipe.cookTime}</td>
+              </tr>
+              <tr>
+                <th scope="row">Total Time</th>
+                <td>{recipe.totalTime}</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h4>Cooking Instructions</h4>
+          <ol>
+            {recipe.instructions.map((instruction, index) => (
+              <li key={index}>{instruction}</li>
+            ))}
+          </ol>
         </div>
       </div>
 
@@ -71,8 +133,12 @@ function RecipeDetail() {
             role="tabpanel"
             aria-labelledby="details-tab"
           >
-            <h4>Recipe Description</h4>
-            <p>{recipe.description}</p>
+            <h4>Ingredients</h4>
+            <ul>
+              {recipe.ingredients.map((ingredient, index) => (
+                <li key={index}>{ingredient}</li>
+              ))}
+            </ul>
           </div>
 
           <div
@@ -84,8 +150,34 @@ function RecipeDetail() {
             <h4>Recipe Information</h4>
             <ul className="list-unstyled">
               <li>
-                <strong>Category:</strong> {recipe.category}
+                <strong>Difficulty:</strong> {recipe.difficulty}
               </li>
+              <li>
+                <strong>Author:</strong> {recipe.author}
+              </li>
+            </ul>
+
+            <h4>Nutrition</h4>
+            <ul className="list-unstyled">
+              <li>
+                <strong>Calories:</strong> {recipe?.nutrition?.calories}
+              </li>
+              <li>
+                <strong>Fat:</strong> {recipe?.nutrition?.fat}
+              </li>
+              <li>
+                <strong>Carbs:</strong> {recipe?.nutrition?.carbs}
+              </li>
+              <li>
+                <strong>Protein:</strong> {recipe?.nutrition?.protein}
+              </li>
+            </ul>
+
+            <h4>Tips</h4>
+            <ul>
+              {recipe.tips.map((tip, index) => (
+                <li key={index}>{tip}</li>
+              ))}
             </ul>
           </div>
         </div>
