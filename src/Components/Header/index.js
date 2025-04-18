@@ -1,133 +1,118 @@
-import { Link, useHistory } from "react-router-dom";
-import { useUser } from "../../UserContext";
-import { useLocation } from "react-router-dom/cjs/react-router-dom";
+import React, { useState } from 'react';
+import { Link, useHistory, useLocation } from 'react-router-dom';
+import { useUser } from '../../UserContext';
+import './Header.css';
 
 function Header() {
   const { user, setUser } = useUser();
   const history = useHistory();
   const location = useLocation();
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const logout = () => {
     setUser(null);
-    history.push("/");
+    history.push('/');
+    setMenuOpen(false);
   };
 
-  return (
-    <nav className="navbar navbar-expand-lg">
-      <div className="container">
-        <Link className="navbar-brand brandLogo" to="/">
-          The Recipe Vault
-        </Link>
-        <button
-          className="navbar-toggler"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#navbarNav"
-          aria-controls="navbarNav"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
-          <span className="navbar-toggler-icon"></span>
-        </button>
-        <div className="collapse navbar-collapse" id="navbarNav">
-          <ul className="navbar-nav text-center">
-            <li className="nav-item">
-              <Link
-                className={`nav-link ${
-                  location.pathname === "/" ? "active" : ""
-                }`}
-                to="/"
-              >
-                Home
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link
-                className={`nav-link ${
-                  location.pathname === "/recipes" ? "active" : ""
-                }`}
-                to="/recipes"
-              >
-                Recipes
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link
-                className={`nav-link ${
-                  location.pathname === "/about-us" ? "active" : ""
-                }`}
-                to="/about-us"
-              >
-                About Us
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link
-                className={`nav-link ${
-                  location.pathname === "/contact-us" ? "active" : ""
-                }`}
-                to="/contact-us"
-              >
-                Contact Us
-              </Link>
-            </li>
+  const toggleMenu = () => setMenuOpen(open => !open);
 
-            {user && user.email && (
-              <li className="nav-item">
-                <Link
-                  className={`nav-link ${
-                    location.pathname === "/recipe-list" ? "active" : ""
-                  }`}
-                  to="/recipe-list"
-                >
-                  CRUD Recipes
-                </Link>
-              </li>
-            )}
-          </ul>
-          <ul className="navbar-nav ms-auto">
-            {user && user.email ? (
-              <>
-                <li className="nav-item">
-                  <span className="nav-link">Hello, {user.firstName}</span>
-                </li>
-                <li className="nav-item">
-                  <button
-                    className="btn btn-sm btn-outline-danger"
-                    onClick={logout}
-                  >
-                    Logout
-                  </button>
-                </li>
-              </>
-            ) : (
-              <>
-                <li className="nav-item">
-                  <Link
-                    className={`nav-link loginText ${
-                      location.pathname === "/login" ? "active" : ""
-                    }`}
-                    to="/login"
-                  >
-                    Login
-                  </Link>
-                </li>
-                <li className="nav-item">
-                  <Link
-                    className={`nav-link signupText ${
-                      location.pathname === "/signup" ? "active" : ""
-                    }`}
-                    to="/signup"
-                  >
-                    Signup
-                  </Link>
-                </li>
-              </>
-            )}
-          </ul>
-        </div>
-      </div>
-    </nav>
+  return (
+    <header className="header">
+      <Link to="/" className="brandLogo">
+        The Recipe Vault
+      </Link>
+
+      {/* hamburger button */}
+      <button
+        className="nav-toggle"
+        aria-label="Toggle navigation"
+        onClick={toggleMenu}
+      >
+        <span className={`hamburger ${menuOpen ? 'open' : ''}`} />
+      </button>
+
+      <nav className={`nav-menu ${menuOpen ? 'open' : ''}`}>
+        <Link
+          to="/"
+          className={`nav-link ${location.pathname === '/' ? 'active' : ''}`}
+          onClick={() => setMenuOpen(false)}
+        >
+          Home
+        </Link>
+        <Link
+          to="/recipes"
+          className={`nav-link ${
+            location.pathname === '/recipes' ? 'active' : ''
+          }`}
+          onClick={() => setMenuOpen(false)}
+        >
+          Recipes
+        </Link>
+        <Link
+          to="/about-us"
+          className={`nav-link ${
+            location.pathname === '/about-us' ? 'active' : ''
+          }`}
+          onClick={() => setMenuOpen(false)}
+        >
+          About Us
+        </Link>
+        <Link
+          to="/contact-us"
+          className={`nav-link ${
+            location.pathname === '/contact-us' ? 'active' : ''
+          }`}
+          onClick={() => setMenuOpen(false)}
+        >
+          Contact Us
+        </Link>
+
+        {user?.email && (
+          <Link
+            to="/recipe-list"
+            className={`nav-link ${
+              location.pathname === '/recipe-list' ? 'active' : ''
+            }`}
+            onClick={() => setMenuOpen(false)}
+          >
+            CRUD Recipes
+          </Link>
+        )}
+
+        {user?.email ? (
+          <>
+            <span className="nav-link greeting">
+              Hello, {user.firstName}
+            </span>
+            <button className="nav-link logout-btn" onClick={logout}>
+              Logout
+            </button>
+          </>
+        ) : (
+          <>
+            <Link
+              to="/login"
+              className={`nav-link ${
+                location.pathname === '/login' ? 'active' : ''
+              }`}
+              onClick={() => setMenuOpen(false)}
+            >
+              Login
+            </Link>
+            <Link
+              to="/signup"
+              className={`nav-link ${
+                location.pathname === '/signup' ? 'active' : ''
+              }`}
+              onClick={() => setMenuOpen(false)}
+            >
+              Signup
+            </Link>
+          </>
+        )}
+      </nav>
+    </header>
   );
 }
 
