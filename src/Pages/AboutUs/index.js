@@ -1,3 +1,5 @@
+// Page created by Priya Thakur (8958634)
+
 import React from "react";
 import AboutUsImg from "../../assets/images/about_us.jpeg";
 import AboutUsImg2 from "../../assets/images/about_us2.jpg";

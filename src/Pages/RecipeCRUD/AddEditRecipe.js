@@ -1,5 +1,7 @@
+// Page created by Vijay Prakash (8962818)
+
 import React, { useEffect } from "react";
-import { useForm, Controller } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { useHistory, useParams } from "react-router-dom";
 import { Button } from "react-bootstrap";
 import { v4 as uuidv4 } from "uuid";
@@ -24,7 +26,6 @@ function AddEditRecipe() {
   // Handle form submission
   const onSubmit = (formData) => {
     const recipes = JSON.parse(localStorage.getItem("recipes")) || [];
-
     if (id) {
       const index = recipes.findIndex((recipe) => recipe.id === id);
       if (index > -1) {
@@ -44,7 +45,8 @@ function AddEditRecipe() {
   // Prefill form values for editing
   const setValues = (id) => {
     const recipes = JSON.parse(localStorage.getItem("recipes"));
-    const recipe = recipes.find((r) => r.id === id);
+
+    const recipe = recipes.find((r) => r.id == id);
    
     if (recipe) {
       setValue("recipeName", recipe.recipeName);
@@ -71,7 +73,7 @@ function AddEditRecipe() {
   return (
     <div className="login-container">
       <div className="container">
-        <div className="col-md-8 m-md-auto loginDiv">
+        <div className="col-md-8 m-md-auto loginDiv recipeAddEdit">
           <h2 className="pageName text-center">
             {id ? "Edit Recipe" : "Add Recipe"}
           </h2>

@@ -1,8 +1,9 @@
+// Page created by Vijay Prakash (8962818)
+
 import { Button } from "react-bootstrap";
 import { useForm } from "react-hook-form";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import queryString from "query-string";
-import InputField from "../../Components/FormFields/InputField";
 import { removeEmptyFields } from "../../Components/Common/utilities";
 import { CATEGORY } from "../../constant";
 import { useHistory } from "react-router-dom/cjs/react-router-dom";

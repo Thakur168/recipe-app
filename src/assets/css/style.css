@@ -38,11 +38,12 @@ body {
     text-shadow: 0 0 2px white;
 }
 
-.navbar-nav .nav-link.active{
+.nav-link.active{
     color: white !important;
     text-shadow: 0 0 2px black;
     text-decoration: underline;
 }
+
 
 .slider-item {
     position: relative;
@@ -506,6 +507,14 @@ a#info-tab {
     border-radius: 5px;
   }
 
+  .page-link {
+    color: black;
+  }
+  .active>.page-link, .page-link.active {
+    background-color: black;
+    border-color: white;
+}
+
 /* Footer styles */
 footer {
     background-color: black;
@@ -619,6 +628,10 @@ footer h3 {
   width: 90% !important;
   margin: 0 !important;
   z-index: auto !important;
+}
+
+.recipeAddEdit{
+  max-width: 100% !important;
 }
 
 .pageName {

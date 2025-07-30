@@ -1,3 +1,5 @@
+// Page created by Hari Karnan (8925421)
+
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import placeholder from "../../assets/images/placeholder_image.png";
